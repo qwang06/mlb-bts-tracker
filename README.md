@@ -1,19 +1,2 @@
 # mlb-bts-tracker
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+I created this project to scrape baseball data and figure out who will most likely get a hit.
