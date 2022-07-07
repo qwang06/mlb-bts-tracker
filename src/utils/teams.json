@@ -1,0 +1,242 @@
+{
+	"ARI": {
+		"league": "NL",
+		"name": "diamondbacks",
+		"colors": {
+			"primary": "#A71930",
+			"secondary": "#E3D4AD"
+		}
+	},
+	"ATL": {
+		"league": "NL",
+		"name": "braves",
+		"colors": {
+			"primary": "#13274f",
+			"secondary": "#ce1141"
+		}
+	},
+	"BAL": {
+		"league": "AL",
+		"name": "orioles",
+		"colors": {
+			"primary": "#DF4601",
+			"secondary": "#000000"
+		}
+	},
+	"BOS": {
+		"league": "AL",
+		"name": "redsox",
+		"colors": {
+			"primary": "#BD3039",
+			"secondary": "#192c55"
+		}
+	},
+	"CHC": {
+		"league": "NL",
+		"name": "cubs",
+		"colors": {
+			"primary": "#0E3386",
+			"secondary": "#CC3433"
+		}
+	},
+	"CHW": {
+		"league": "AL",
+		"name": "whitesox",
+		"colors": {
+			"primary": "#000000",
+			"secondary": "#c4ced4"
+		}
+	},
+	"CIN": {
+		"league": "NL",
+		"name": "reds",
+		"colors": {
+			"primary": "#C6011F",
+			"secondary": "#000000"
+		}
+	},
+	"CLE": {
+		"league": "AL",
+		"name": "guardians",
+		"colors": {
+			"primary": "#e31937",
+			"secondary": "#1a2e5a"
+		}
+	},
+	"COL": {
+		"league": "NL",
+		"name": "rockies",
+		"colors": {
+			"primary": "#33006f",
+			"secondary": "#C4CED4"
+		}
+	},
+	"DET": {
+		"league": "AL",
+		"name": "tigers",
+		"colors": {
+			"primary": "#182d55",
+			"secondary": "#f26722"
+		}
+	},
+	"HOU": {
+		"league": "AL",
+		"name": "astros",
+		"colors": {
+			"primary": "#002D62",
+			"secondary": "#EB6E1F"
+		}
+	},
+	"KCR": {
+		"league": "AL",
+		"name": "royals",
+		"colors": {
+			"primary": "#174885",
+			"secondary": "#c0995a"
+		}
+	},
+	"LAA": {
+		"league": "AL",
+		"name": "angels",
+		"colors": {
+			"primary": "#ba0021",
+			"secondary": "#003263"
+		}
+	},
+	"LAD": {
+		"league": "NL",
+		"name": "dodgers",
+		"colors": {
+			"primary": "#005A9C",
+			"secondary": "#EF3E42"
+		}
+	},
+	"MIA": {
+		"league": "NL",
+		"name": "marlins",
+		"colors": {
+			"primary": "#ff6600",
+			"secondary": "#0077c8"
+		}
+	},
+	"MIL": {
+		"league": "NL",
+		"name": "brewers",
+		"colors": {
+			"primary": "#0a2351",
+			"secondary": "#b6922e"
+		}
+	},
+	"MIN": {
+		"league": "AL",
+		"name": "twins",
+		"colors": {
+			"primary": "#002b5c",
+			"secondary": "#d31145"
+		}
+	},
+	"NYM": {
+		"league": "NL",
+		"name": "mets",
+		"colors": {
+			"primary": "#002d72",
+			"secondary": "#ff5910"
+		}
+	},
+	"NYY": {
+		"league": "AL",
+		"name": "yankees",
+		"colors": {
+			"primary": "#132448",
+			"secondary": "#c4ced3"
+		}
+	},
+	"OAK": {
+		"league": "AL",
+		"name": "athletics",
+		"colors": {
+			"primary": "#003831",
+			"secondary": "#efb21e"
+		}
+	},
+	"PHI": {
+		"league": "NL",
+		"name": "phillies",
+		"colors": {
+			"primary": "#e81828",
+			"secondary": "#284898"
+		}
+	},
+	"PIT": {
+		"league": "NL",
+		"name": "pirates",
+		"colors": {
+			"primary": "#000000",
+			"secondary": "#fdb827"
+		}
+	},
+	"SDP": {
+		"league": "NL",
+		"name": "padres",
+		"colors": {
+			"primary": "#2F241D",
+			"secondary": "#FFC425"
+		}
+	},
+	"SFG": {
+		"league": "NL",
+		"name": "giants",
+		"colors": {
+			"primary": "#fd5a1e",
+			"secondary": "#000000"
+		}
+	},
+	"SEA": {
+		"league": "AL",
+		"name": "mariners",
+		"colors": {
+			"primary": "#0c2c56",
+			"secondary": "#005c5c"
+		}
+	},
+	"STL": {
+		"league": "NL",
+		"name": "cardinals",
+		"colors": {
+			"primary": "#c41e3a",
+			"secondary": "#22205f"
+		}
+	},
+	"TBR": {
+		"league": "AL",
+		"name": "rays",
+		"colors": {
+			"primary": "#092c5c",
+			"secondary": "#8fbce6"
+		}
+	},
+	"TEX": {
+		"league": "AL",
+		"name": "rangers",
+		"colors": {
+			"primary": "#003278",
+			"secondary": "#c0111f"
+		}
+	},
+	"TOR": {
+		"league": "AL",
+		"name": "bluejays",
+		"colors": {
+			"primary": "#134a8e",
+			"secondary": "#1d2d5c"
+		}
+	},
+	"WSN": {
+		"league": "NL",
+		"name": "nationals",
+		"colors": {
+			"primary": "#ab0003",
+			"secondary": "#212759"
+		}
+	}
+}
