@@ -1,44 +1,47 @@
 <template>
-	<v-container>
-		<v-row>
-			<v-col>
-				<v-card>
-					<v-card-title>AL</v-card-title>
-					<v-card-text>
-						<v-btn
-							text large
-							v-for="(teamObj, key) in teams"
-							v-if="teamObj.league === 'AL'"
-							:key="key"
-							:color="teamObj.colors.primary"
-						>
-							{{key}}
-						</v-btn>
-					</v-card-text>
-				</v-card>
-			</v-col>
-			<v-col>
-				<v-card>
-					<v-card-title>NL</v-card-title>
-					<v-card-text>
-						<v-btn
-							text large
-							v-for="(teamObj, key) in teams"
-							v-if="teamObj.league === 'NL'"
-							:key="key"
-							:color="teamObj.colors.primary"
-						>
-							{{key}}
-						</v-btn>
-					</v-card-text>
-				</v-card>
-			</v-col>
-		</v-row>
-	</v-container>
+	<v-row>
+		<v-col>
+			<v-card>
+				<v-card-title>AL</v-card-title>
+				<v-card-text>
+					<v-btn
+						x-large
+						fab
+						v-for="(teamObj, team) in teams"
+						v-if="teamObj.league === 'AL'"
+						:key="team"
+						:color="teamObj.colors.primary"
+						:style="{ color: teamObj.colors.secondary, margin: '5px' }"
+						@click="$emit('team-select', teamObj, team)"
+					>
+						{{team}}
+					</v-btn>
+				</v-card-text>
+			</v-card>
+		</v-col>
+		<v-col>
+			<v-card>
+				<v-card-title>NL</v-card-title>
+				<v-card-text>
+					<v-btn
+						x-large
+						fab
+						v-for="(teamObj, team) in teams"
+						v-if="teamObj.league === 'NL'"
+						:key="team"
+						:color="teamObj.colors.primary"
+						:style="{ color: teamObj.colors.secondary, margin: '5px' }"
+						@click="$emit('team-select',teamObj, team)"
+					>
+						{{team}}
+					</v-btn>
+				</v-card-text>
+			</v-card>
+		</v-col>
+	</v-row>
 </template>
 <script>
 import teams from '../utils/teams.json';
-console.log('teams', teams);
 export default {
 	name: 'TeamSelector',
 	components: {
@@ -47,8 +50,6 @@ export default {
 		return {
 			teams
 		}
-	},
-	methods: {
 	}
 }
 </script>

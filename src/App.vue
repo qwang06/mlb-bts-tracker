@@ -1,12 +1,11 @@
 <template>
 	<v-app id="app">
-		<h1 class="banner">MLB Beat the Streak Tracker</h1>
 		<Batters />
 	</v-app>
 </template>
 
 <script>
-import Batters from './components/Batters.vue'
+import Batters from './components/Batters.vue';
 
 export default {
 	name: 'App',
@@ -23,6 +22,7 @@ export default {
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
 	color: #2c3e50;
+	background-color: #f5f5f5;
 }
 .banner {
 	text-transform: uppercase;
