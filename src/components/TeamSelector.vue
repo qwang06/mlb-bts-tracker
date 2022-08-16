@@ -31,7 +31,7 @@
 						:key="team"
 						:color="teamObj.colors.primary"
 						:style="{ color: teamObj.colors.secondary, margin: '5px' }"
-						@click="$emit('team-select',teamObj, team)"
+						@click="$emit('team-select', teamObj, team)"
 					>
 						{{team}}
 					</v-btn>

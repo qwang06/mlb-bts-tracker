@@ -16,80 +16,30 @@
 				<v-btn class="update-btns" color="info" @click="updateMostHits">
 					<v-icon>mdi-baseball-bat</v-icon>Most Hits
 				</v-btn>
+				<v-btn class="update-btns" color="info" @click="updateColdPitchers">
+					<v-icon>mdi-baseball-bat</v-icon>Cold Pitchers
+				</v-btn>
 			</v-col>
 		</v-row>
-		<TeamSelector @team-select="updateLineUps" />
+		<TeamSelector @team-select="updateLineups" />
 		<v-row>
 			<v-col>
-				<v-card :loading="isLoading">
-					<template slot="progress">
-						<v-progress-linear
-							color="primary"
-							height="5"
-							indeterminate
-						></v-progress-linear>
-					</template>
-					<v-skeleton-loader
-						v-if="isLoading"
-						class="mx-auto"
-						max-width="300"
-						type="list-item,list-item,list-item,list-item,list-item,list-item,list-item,list-item,list-item"
-					></v-skeleton-loader>
-					<v-list v-if="!isLoading && batters.length">
-						<v-subheader class="subheader">{{battersTitleText}}</v-subheader>
-						<v-list-item v-for="(b, i) in batters" :key="i">
-							<v-list-item-content>
-								<v-list-item-title>
-									<v-btn
-										large
-										v-if="b.bats"
-										:text="batterSelected.name !== b.name"
-										:color="teamSelected.colors.primary"
-										:style="batterBtnStyles(b)"
-										@click="selectBatter(b)"
-									>
-										<v-badge dot left :color="batterVsPitcherDetails[b.name] && batterVsPitcherDetails[b.name].AVG < 0.300 ? 'red' : 'green'">
-											({{b.bats}}) {{b.name}}
-										</v-badge>
-									</v-btn>
-									<v-btn
-										large
-										v-else
-										:text="batterSelected.name !== b.name"
-										:color="getTeamColors(b.team).primary"
-										:style="batterBtnStyles(b)"
-										@click="selectBatter(b)"
-									>
-										({{b.team}}) {{b.name}} - {{b.avg || b.hits}}
-									</v-btn>
-								</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list>
-				</v-card>
+				<Lineup
+					@select-batter="selectBatter"
+					:title="battersTitle"
+					:batters="batters"
+					:batterSelected="batterSelected"
+					:teamSelected="teamSelected"
+					:batterVsPitcherDetails="batterVsPitcherDetails"
+				/>
 			</v-col>
 			<v-col>
-				<v-card>
-					<v-card-title v-if="batterSelected.name">{{batterSelected.name}}</v-card-title>
-					<v-card-text v-if="batterDetails">
-						<v-simple-table>
-							<template v-slot:default>
-								<tbody>
-									<tr v-for="(value, key) in batterDetails" :key="key">
-										<td v-if="key !== 'AVG'">{{key}}</td>
-										<td v-else>
-											<v-badge dot left :color="Number(value) < 0.300 ? 'red' : 'green'">
-												{{ key }}
-											</v-badge>
-										</td>
-										<td>{{value}}</td>
-									</tr>
-								</tbody>
-							</template>
-						</v-simple-table>
-					</v-card-text>
-				</v-card>
+				<BatterDetails
+					:details="batterDetails"
+					:batterSelected="batterSelected"
+				/>
 			</v-col>
+			<v-col v-if="showPitcherStats"></v-col>
 		</v-row>
 	</v-container>
 </template>
@@ -97,135 +47,134 @@
 import axios from 'axios';
 import teams from '../utils/teams.json';
 import TeamSelector from './TeamSelector.vue';
+import Lineup from './Lineup.vue';
+import BatterDetails from './BatterDetails.vue';
 export default {
 	name: 'Batters',
 	components: {
-		TeamSelector
+		TeamSelector,
+		Lineup,
+		BatterDetails
 	},
 	data() {
 		return {
 			hasError: false,
 			error: '',
-			battersTitleText: '',
+			battersTitle: '',
 			batterDetails: null,
 			batterVsPitcherDetails: null,
 			topBatters: null,
 			isLoading: false,
+			showPitcherStats: false,
 			teamSelected: {},
 			batterSelected: {},
 			batters: [],
-			lineUps: {}
+			lineups: {}
 		}
 	},
 	methods: {
-		batterBtnStyles(batter) {
-			const isBatterSelected = this.batterSelected.name !== batter.name;
-			const teamColors = this.getTeamColors(batter.team || this.teamSelected.team);
-			return { color: isBatterSelected ? teamColors.primary : teamColors.secondary }
-		},
-		getTeamColors(team) {
-			if (!team) {
-				console.log('Name does not match any team', name);
-				return { primary: 'primary', secondary: 'accent' };
-			}
-			if (!teams[team]) {
-				console.log('Team not found?', teams);
-				return { primary: 'primary', secondary: 'accent' };
-			}
-			return teams[team].colors;
-		},
 		selectBatter(batter) {
+			console.log('batter', batter);
 			this.batterDetails = this.batterVsPitcherDetails[batter.name];
 			this.batterSelected = batter;
 		},
-		updateBatterVsPitcherDetails() {
+		updateBatterVsPitcherDetails(done) {
+			if (this.batterVsPitcherDetails) {
+				return done();
+			}
 			axios(`http://localhost:9876/?q=batters`)
 				.then(res => {
 					this.batterVsPitcherDetails = res.data;
+					return done();
 				})
 				.catch(err => {
 					this.hasError = true;
 					this.error = 'Error getting batting details: ' + err.message;
+					return done();
 				});
 		},
 		updateTopAvg(e) {
 			this.isLoading = true;
-			this.battersTitleText = 'Top AVG Leaders';
-			if (!this.batterVsPitcherDetails) {
-				this.updateBatterVsPitcherDetails();
-			}
-			if (this.topBatters) {
-				this.isLoading = false;
-				this.batters = this.topBatters.avg;
-				this.selectBatter(this.batters[0]);
-				return;
-			}
-			axios('http://localhost:9876/?q=top')
-				.then(res => {
-					this.topBatters = res.data;
+			this.battersTitle = 'Top AVG Leaders';
+			this.updateBatterVsPitcherDetails(() => {
+				if (this.topBatters) {
 					this.isLoading = false;
-					this.batters = res.data.avg;
+					this.batters = this.topBatters.avg;
 					this.selectBatter(this.batters[0]);
-				})
-				.catch(err => {
-					this.isLoading = false;
-					this.hasError = true;
-					this.error = 'Error getting batting details: ' + err.message;
-				});
-		},
-		updateMostHits(e) {
-			this.isLoading = true;
-			this.battersTitleText = 'Hits Leaders';
-			if (!this.batterVsPitcherDetails) {
-				this.updateBatterVsPitcherDetails();
-			}
-			if (this.topBatters) {
-				this.isLoading = false;
-				this.batters = this.topBatters.hits;
-				this.selectBatter(this.batters[0]);
-				return;
-			}
-			axios('http://localhost:9876/?q=top')
-				.then(res => {
-					this.topBatters = res.data;
-					this.isLoading = false;
-					this.batters = res.data.hits;
-					this.selectBatter(this.batters[0]);
-				})
-				.catch(err => {
-					this.isLoading = false;
-					this.hasError = true;
-					this.error = 'Error getting batting details: ' + err.message;
-				});
-		},
-		updateLineUps(teamObj, team) {
-			this.isLoading = true;
-			this.battersTitleText = team + ' Line Up';
-			this.teamSelected = { team, ...teamObj };
-			if (!this.batterVsPitcherDetails) {
-				this.updateBatterVsPitcherDetails();
-			}
-
-			if (!this.lineUps[teamObj.name]) {
-				axios('http://localhost:9876/?q=lineups')
+					return;
+				}
+				axios('http://localhost:9876/?q=top')
 					.then(res => {
+						this.topBatters = res.data;
 						this.isLoading = false;
-						this.lineUps = res.data;
-						this.displayLineUps(teamObj, team);
+						this.batters = res.data.avg;
+						this.selectBatter(this.batters[0]);
 					})
 					.catch(err => {
 						this.isLoading = false;
 						this.hasError = true;
-						this.error = 'Error getting line ups: ' + err.message;
+						this.error = 'Error getting batting details: ' + err.message;
 					});
+			});
+		},
+		updateMostHits(e) {
+			this.isLoading = true;
+			this.battersTitle = 'Hits Leaders';
+			this.updateBatterVsPitcherDetails(() => {
+				if (this.topBatters) {
+					this.isLoading = false;
+					this.batters = this.topBatters.hits;
+					this.selectBatter(this.batters[0]);
+					return;
+				}
+				axios('http://localhost:9876/?q=top')
+					.then(res => {
+						this.topBatters = res.data;
+						this.isLoading = false;
+						this.batters = res.data.hits;
+						this.selectBatter(this.batters[0]);
+					})
+					.catch(err => {
+						this.isLoading = false;
+						this.hasError = true;
+						this.error = 'Error getting batting details: ' + err.message;
+					});
+			});
+		},
+		updateLineups(teamObj, team) {
+			this.isLoading = true;
+			this.battersTitle = team + ' Line Up';
+			this.teamSelected = { team, ...teamObj };
+			this.updateBatterVsPitcherDetails(() => {
+				if (!this.lineups[teamObj.name]) {
+					axios('http://localhost:9876/?q=lineups')
+						.then(res => {
+							this.isLoading = false;
+							this.lineups = res.data;
+							this.displayLineups(teamObj, team);
+						})
+						.catch(err => {
+							this.isLoading = false;
+							this.hasError = true;
+							this.error = 'Error getting line ups: ' + err.message;
+						});
+				} else {
+					this.isLoading = false;
+					this.displayLineups(teamObj, team);
+				}
+			});
+		},
+		displayLineups(teamObj, team) {
+			if (!this.lineups[teamObj.name]) {
+				this.hasError = true;
+				this.error = 'Line up not found. Are they playing today?';
 			} else {
-				this.isLoading = false;
-				this.displayLineUps(teamObj, team);
+				this.batters = this.lineups[teamObj.name].map(batter => ({ ...batter }));
+				this.selectBatter(this.batters[0]);
 			}
 		},
-		displayLineUps(teamObj, team) {
-			this.batters = this.lineUps[teamObj.name].map(batter => ({ ...batter }));
-			this.selectBatter(this.batters[0]);
+		updateColdPitchers() {
+			
 		}
 	}
 }
