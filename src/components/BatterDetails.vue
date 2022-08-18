@@ -1,5 +1,5 @@
 <template>
-	<v-card>
+	<v-card :loading="isLoadingBatterDetails">
 		<v-card-title v-if="batterSelected.name">{{batterSelected.name}}</v-card-title>
 		<v-card-text v-if="details">
 			<v-simple-table>
@@ -17,7 +17,10 @@
 									{{ key }}
 								</v-badge>
 							</td>
-							<td>{{value}}</td>
+							<td v-if="key === 'Pitcher'">
+								<v-btn @click="$emit('get-pitcher-details', value)">{{value}}</v-btn>
+							</td>
+							<td v-else>{{value}}</td>
 						</tr>
 					</tbody>
 				</template>
@@ -56,10 +59,13 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
 	name: 'BatterDetails',
 	props: {
+		isLoadingBatterDetails: Boolean,
 		batterSelected: Object,
+		teamSelected: Object,
 		details: Object
 	},
 	components: {

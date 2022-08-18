@@ -50,9 +50,10 @@
 <script>
 import teams from '../utils/teams.json';
 export default {
-	name: 'Lineup',
+	name: 'LineUp',
 	props: {
 		title: String,
+		isLoading: Boolean,
 		batters: Array,
 		batterSelected: Object,
 		teamSelected: Object,
@@ -61,9 +62,7 @@ export default {
 	components: {
 	},
 	data() {
-		return {
-			isLoading: false
-		}
+		return {}
 	},
 	methods: {
 		getTeamColors(team) {

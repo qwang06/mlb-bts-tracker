@@ -16,16 +16,14 @@
 				<v-btn class="update-btns" color="info" @click="updateMostHits">
 					<v-icon>mdi-baseball-bat</v-icon>Most Hits
 				</v-btn>
-				<v-btn class="update-btns" color="info" @click="updateColdPitchers">
-					<v-icon>mdi-baseball-bat</v-icon>Cold Pitchers
-				</v-btn>
 			</v-col>
 		</v-row>
 		<TeamSelector @team-select="updateLineups" />
 		<v-row>
 			<v-col>
-				<Lineup
+				<LineUp
 					@select-batter="selectBatter"
+					:isLoading="isLoading"
 					:title="battersTitle"
 					:batters="batters"
 					:batterSelected="batterSelected"
@@ -35,11 +33,16 @@
 			</v-col>
 			<v-col>
 				<BatterDetails
+					@get-pitcher-details="getPitcherDetails"
+					:isLoadingBatterDetails="isLoadingBatterDetails"
 					:details="batterDetails"
 					:batterSelected="batterSelected"
+					:teamSelected="teamSelected"
 				/>
 			</v-col>
-			<v-col v-if="showPitcherStats"></v-col>
+			<v-col v-if="showPitcherStats">
+				
+			</v-col>
 		</v-row>
 	</v-container>
 </template>
@@ -47,14 +50,16 @@
 import axios from 'axios';
 import teams from '../utils/teams.json';
 import TeamSelector from './TeamSelector.vue';
-import Lineup from './Lineup.vue';
+import LineUp from './LineUp.vue';
 import BatterDetails from './BatterDetails.vue';
+import PitcherDetails from './PitcherDetails.vue';
 export default {
 	name: 'Batters',
 	components: {
 		TeamSelector,
-		Lineup,
-		BatterDetails
+		LineUp,
+		BatterDetails,
+		PitcherDetails
 	},
 	data() {
 		return {
@@ -65,6 +70,8 @@ export default {
 			batterVsPitcherDetails: null,
 			topBatters: null,
 			isLoading: false,
+			isLoadingBatterDetails: false,
+			isLoadingPitcherDetails: false,
 			showPitcherStats: false,
 			teamSelected: {},
 			batterSelected: {},
@@ -74,21 +81,24 @@ export default {
 	},
 	methods: {
 		selectBatter(batter) {
-			console.log('batter', batter);
 			this.batterDetails = this.batterVsPitcherDetails[batter.name];
 			this.batterSelected = batter;
 		},
 		updateBatterVsPitcherDetails(done) {
+			this.isLoadingBatterDetails = true;
 			if (this.batterVsPitcherDetails) {
+				this.isLoadingBatterDetails = false;
 				return done();
 			}
-			axios(`http://localhost:9876/?q=batters`)
+			axios(`http://localhost:9876/?q=batterVsPitcher`)
 				.then(res => {
 					this.batterVsPitcherDetails = res.data;
+					this.isLoadingBatterDetails = false;
 					return done();
 				})
 				.catch(err => {
 					this.hasError = true;
+					this.isLoadingBatterDetails = false;
 					this.error = 'Error getting batting details: ' + err.message;
 					return done();
 				});
@@ -173,8 +183,25 @@ export default {
 				this.selectBatter(this.batters[0]);
 			}
 		},
-		updateColdPitchers() {
-			
+		getTeamInitials(teamName) {
+			// `teamName` is the name of the team without the city/state
+			return Object.keys(teams).filter(teamInitial => teams[teamInitial].name === teamName.toLowerCase()).pop();
+		},
+		getPitcherDetails(pitcherName) {
+			this.showPitcherStats = true;
+			this.isLoadingPitcherDetails = true;
+
+			const team = this.getTeamInitials(this.batterDetails['Pitcher Team']);
+			axios(`http://localhost:9876/?q=pitcher&n=${pitcherName}&t=${team}`)
+				.then(res => {
+					this.isLoadingPitcherDetails = false;
+					console.log('res', res.data);
+				})
+				.catch(err => {
+					this.hasError = true;
+					this.isLoadingPitcherDetails = false;
+					this.error = 'Error getting pitcher details: ' + err.message;
+				});
 		}
 	}
 }
