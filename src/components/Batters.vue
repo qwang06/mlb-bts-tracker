@@ -41,7 +41,11 @@
 				/>
 			</v-col>
 			<v-col v-if="showPitcherStats">
-				
+				<PitcherDetails
+					:details="pitcherDetails"
+					:isLoading="isLoadingPitcherDetails"
+					:pitcherSelected="pitcherSelected"
+				/>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -67,6 +71,7 @@ export default {
 			error: '',
 			battersTitle: '',
 			batterDetails: null,
+			pitcherDetails: null,
 			batterVsPitcherDetails: null,
 			topBatters: null,
 			isLoading: false,
@@ -75,6 +80,7 @@ export default {
 			showPitcherStats: false,
 			teamSelected: {},
 			batterSelected: {},
+			pitcherSelected: {},
 			batters: [],
 			lineups: {}
 		}
@@ -188,13 +194,18 @@ export default {
 			return Object.keys(teams).filter(teamInitial => teams[teamInitial].name === teamName.toLowerCase()).pop();
 		},
 		getPitcherDetails(pitcherName) {
+			const team = this.getTeamInitials(this.batterDetails['Pitcher Team']);
 			this.showPitcherStats = true;
 			this.isLoadingPitcherDetails = true;
+			this.pitcherSelected = {
+				name: pitcherName,
+				team
+			}
 
-			const team = this.getTeamInitials(this.batterDetails['Pitcher Team']);
 			axios(`http://localhost:9876/?q=pitcher&n=${pitcherName}&t=${team}`)
 				.then(res => {
 					this.isLoadingPitcherDetails = false;
+					this.pitcherDetails = res.data;
 					console.log('res', res.data);
 				})
 				.catch(err => {

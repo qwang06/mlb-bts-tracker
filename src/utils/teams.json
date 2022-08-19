@@ -25,7 +25,7 @@
 	},
 	"BOS": {
 		"league": "AL",
-		"name": "redsox",
+		"name": "red sox",
 		"colors": {
 			"primary": "#BD3039",
 			"secondary": "#192c55"
@@ -41,7 +41,7 @@
 	},
 	"CHW": {
 		"league": "AL",
-		"name": "whitesox",
+		"name": "white sox",
 		"colors": {
 			"primary": "#000000",
 			"secondary": "#c4ced4"
@@ -225,7 +225,7 @@
 	},
 	"TOR": {
 		"league": "AL",
-		"name": "bluejays",
+		"name": "blue jays",
 		"colors": {
 			"primary": "#134a8e",
 			"secondary": "#1d2d5c"

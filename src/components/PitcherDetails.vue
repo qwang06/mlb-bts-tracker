@@ -1,5 +1,6 @@
 <template>
 	<v-card :loading="isLoading">
+		<v-card-title v-if="pitcherSelected.name">{{pitcherSelected.name}}</v-card-title>
 		<template slot="progress">
 			<v-progress-linear
 				color="primary"
@@ -11,39 +12,20 @@
 			v-if="isLoading"
 			class="mx-auto"
 			max-width="300"
-			type="list-item,list-item,list-item,list-item,list-item,list-item,list-item,list-item,list-item"
+			type="table"
 		></v-skeleton-loader>
-		<v-list v-if="!isLoading && batters.length">
-			<v-subheader class="subheader">{{title}}</v-subheader>
-			<v-list-item v-for="(b, i) in batters" :key="i">
-				<v-list-item-content>
-					<v-list-item-title>
-						<v-btn
-							large
-							v-if="b.bats"
-							:text="batterSelected.name !== b.name"
-							:color="teamSelected.colors.primary"
-							:style="batterBtnStyles(b)"
-							@click="$emit('select-batter', b)"
-						>
-							<v-badge dot left :color="batterVsPitcherDetails[b.name] && batterVsPitcherDetails[b.name].AVG < 0.300 ? 'red' : 'green'">
-								({{b.bats}}) {{b.name}}
-							</v-badge>
-						</v-btn>
-						<v-btn
-							large
-							v-else
-							:text="batterSelected.name !== b.name"
-							:color="getTeamColors(b.team).primary"
-							:style="batterBtnStyles(b)"
-							@click="$emit('select-batter', b)"
-						>
-							({{b.team}}) {{b.name}} - {{b.avg || b.hits}}
-						</v-btn>
-					</v-list-item-title>
-				</v-list-item-content>
-			</v-list-item>
-		</v-list>
+		<v-card-text v-if="details">
+			<v-simple-table>
+				<template v-slot:default>
+					<tbody>
+						<tr v-for="(value, key) in details" :key="key">
+							<td>{{key}}</td>
+							<td>{{value}}</td>
+						</tr>
+					</tbody>
+				</template>
+			</v-simple-table>
+		</v-card-text>
 	</v-card>
 </template>
 
@@ -51,12 +33,14 @@
 export default {
 	name: 'PitcherDetails',
 	props: {
+		details: Object,
+		pitcherSelected: Object,
+		isLoading: Boolean
 	},
 	components: {
 	},
 	data() {
 		return {
-			isLoading: false
 		}
 	},
 	methods: {
